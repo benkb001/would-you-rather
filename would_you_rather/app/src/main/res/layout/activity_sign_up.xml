@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--
+    TODO:
+    This will be the sign up view
+    a username input, a password input, a password confirmation input,
+    a way to submit, and a way to go back to the
+    sign-in page if the user already has an account
+    -->
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,15 @@
+1. We need to either access an android app or some hardware,
+my two ideas are either a voice input so users can
+narrate their question/options, or make it so it will go to
+the next post if the user shakes the device (accelerometer)
+Any other ideas appreciated :)
+
+2. My current scope for the project is this:
+users can sign up and sign in, each has a username and password
+users can post new questions. others will see the username of who posted it
+users can answer questions and see how their response compares
+
+If we want, we could add another view where users can see
+a list of all the posts they have made and how many people have
+responded and how they responded. or any other additions we want.
+but probably the above is enough to get full credit.
