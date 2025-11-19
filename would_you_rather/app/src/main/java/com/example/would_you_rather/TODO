@@ -1,10 +1,45 @@
-1. We need to either access an android app or some hardware,
+1. For this requirement:
+
+    Includes meaningful use of either an app (for example, email, voice recognition,
+     ..) or hardware (gps, accelerometer, ..) from the phone or some Google services(
+     maps, ..).
+
+We need to either access an android app or some hardware,
 my two ideas are either a voice input so users can
 narrate their question/options, or make it so it will go to
 the next post if the user shakes the device (accelerometer)
-Any other ideas appreciated :)
 
-2. My current scope for the project is this:
+2.
+For this requirement:
+
+At least 3 views; at least 2 views should "use" the same data (either sharing or
+   passing the data).
+
+I think passing the username from sign-in to home and post should be sufficient
+
+3. For this requirement:
+    There should be local, persistent meaningful data (for example you can enable
+    the user to set style preferences such as colors, ..); there must be at least 2
+    persistent variables.
+
+We could store the user's username and password as local data and then use
+it to sign in automatically when they open the app.
+
+4.For this requirement:
+    Uses at least two new GUI components not studied in class (rating bar, seek bar,
+    progress bar, analog clock, calendar view, ...).
+    • There should be a listener registered on at least one of these 2 new GUI
+    components (and there should be code to do something meaningful)
+
+I'm not sure tbh! Ideas?
+
+5. For this requirement:
+    Includes advertising (fake ad pulled from Google services).
+
+We could have interstitial ads served instead of posts every ten posts or something
+
+
+6. Finally, my current general scope for the project is this:
 users can sign up and sign in, each has a username and password
 users can post new questions. others will see the username of who posted it
 users can answer questions and see how their response compares
