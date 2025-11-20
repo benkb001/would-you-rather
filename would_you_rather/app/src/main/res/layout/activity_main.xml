@@ -6,22 +6,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <!--
-    TODO:
 
-    The entry page for our app will be a sign-in page.
-    We will need to have a username input element, a
-    password input element, a way to submit,
-    and a sign-up button (to switch to the sign-up view)
-    -->
+    <LinearLayout
+        android:layout_marginTop="125dp"
+        android:layout_marginHorizontal="50dp"
+
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/input_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:layout_margin="20dp"
+            />
+
+        <EditText
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_margin="20dp" />
+
+        <Button
+            android:id="@+id/button_sign_in"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="@color/button_primary"
+            android:text="@string/sign_in"
+            />
+
         <TextView
+            android:id="@+id/view_sign_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="@string/sign_up"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <Button
+            android:id="@+id/button_sign_up"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="@color/button_secondary"
+            android:text="@string/button_sign_up"
+            />
+
+    </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

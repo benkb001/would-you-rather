@@ -1,23 +1,21 @@
 package com.example.would_you_rather
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.widget.Button
+import android.widget.EditText
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        /* TODO:
-            activity_main will be a log-in view, user will
-            need to create an account (provide email and password),
-            or move to the sign-in view. find the username input element,
-            the password input element, the login button and the sign-up button and
-            set their listeners. You will need to call the Backend.SignUp function
-            with the username,
-         */
+
 
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -27,5 +25,21 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        findViewById<Button>(R.id.button_sign_in).setOnClickListener {
+            val user : String = findViewById<EditText>(R.id.input_username).text.toString()
+            val password : String = findViewById<EditText>(R.id.input_password).text.toString()
+            try {
+                Backend.signIn(user, password)
+                val intent : Intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("username", user)
+                startActivity(intent)
+            } catch (e : Exception) {
+                val root : ConstraintLayout = findViewById<ConstraintLayout>(R.id.main)
+                Snackbar.make(
+                    root,
+                    "Unable to sign in: ${e.message}",
+                    Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 }

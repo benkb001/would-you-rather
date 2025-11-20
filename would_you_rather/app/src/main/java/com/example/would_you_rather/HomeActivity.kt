@@ -1,6 +1,7 @@
 package com.example.would_you_rather
 
 import android.os.Bundle
+
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,7 +18,7 @@ class HomeActivity : AppCompatActivity() {
         get information about the next post we
         want the user to see, then build a
         view using WouldYouRatherView and display it.
-
+        You can get the username with intent.getStringExtra("username")
          */
     }
 
