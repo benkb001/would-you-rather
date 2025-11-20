@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        findViewById<Button>(R.id.button_sign_up).setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
+        }
+
         findViewById<Button>(R.id.button_sign_in).setOnClickListener {
             val user : String = findViewById<EditText>(R.id.input_username).text.toString()
             val password : String = findViewById<EditText>(R.id.input_password).text.toString()
