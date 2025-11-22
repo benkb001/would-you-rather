@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/authorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Posted by ..."
+        android:textSize="14sp"
+        android:padding="8dp" />
+
+    <!-- Top Option -->
+    <TextView
+        android:id="@+id/optionA"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="#3A7BFF"
+        android:textSize="24sp"
+        android:text="Option A" />
+
+    <!-- OR circle -->
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="OR"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/or_circle"
+        android:translationY="-40dp"/>
+
+    <!-- Bottom Option -->
+    <TextView
+        android:id="@+id/optionB"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="#FF4444"
+        android:textSize="24sp"
+        android:text="Option B"
+        android:translationY="-79dp"
+        android:translationZ="-99dp"/>
+</LinearLayout>

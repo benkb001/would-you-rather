@@ -31,7 +31,7 @@ class Backend {
              */
         }
 
-        fun getPost(username : String) : JSONObject {
+        fun getPost(username : String) : Post {
             TODO()
             /*
             This function will get a post the user
