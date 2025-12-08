@@ -11,6 +11,8 @@ import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.Snackbar
 
+// Group participation: Om Arya, Benjamin Bradford, Saanvi Kataria, and Steven Ha each contributed ~25%.
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
