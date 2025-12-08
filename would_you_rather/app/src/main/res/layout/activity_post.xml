@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:dividerPadding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create a question"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/input_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Would you rather..."
+                android:minHeight="80dp" />
+
+            <Button
+                android:id="@+id/button_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Use voice"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/input_option1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Option A" />
+
+            <EditText
+                android:id="@+id/input_option2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Option B" />
+
+            <TextView
+                android:id="@+id/ratingLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How fun is this question?"
+                android:paddingTop="12dp"
+                android:textStyle="bold" />
+
+            <RatingBar
+                android:id="@+id/questionRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="1.0" />
+
+            <Button
+                android:id="@+id/submitPost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Share question"
+                android:padding="14dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.example.would_you_rather.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

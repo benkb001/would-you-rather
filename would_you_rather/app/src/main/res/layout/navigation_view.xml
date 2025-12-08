@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:gravity="center"
+    android:background="@color/black">
+
+    <Button
+        android:id="@+id/nav_home"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:text="Home"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/button_primary" />
+
+    <Space
+        android:layout_width="12dp"
+        android:layout_height="1dp" />
+
+    <Button
+        android:id="@+id/nav_post"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:text="New Post"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/button_secondary" />
+
+</LinearLayout>

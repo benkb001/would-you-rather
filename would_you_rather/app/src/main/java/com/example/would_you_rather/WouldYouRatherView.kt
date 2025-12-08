@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 
 /*
     TODO: This class will be the view where users can see and select
@@ -31,8 +32,10 @@ class WouldYouRatherView @JvmOverloads constructor(
     private lateinit var option1Count: Integer
     private lateinit var option2Count: Integer
     private lateinit var currentUser: String
+    private lateinit var question: String
 
     private val authorText: TextView
+    private val questionText: TextView
     private val optionAText: TextView
     private val optionBText: TextView
 
@@ -41,6 +44,7 @@ class WouldYouRatherView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.view_would_you_rather, this, true)
 
         authorText = findViewById(R.id.authorText)
+        questionText = findViewById(R.id.questionText)
         optionAText = findViewById(R.id.optionA)
         optionBText = findViewById(R.id.optionB)
     }
@@ -48,12 +52,14 @@ class WouldYouRatherView @JvmOverloads constructor(
     fun setPost(post: Post) {
         this.post_id = post.post_id
         this.author = post.author
+        this.question = post.question
         this.option1 = post.option1
         this.option2 = post.option2
         this.option1Count = post.option1Count
         this.option2Count = post.option2Count
 
         authorText.text = "Posted by ${post.author}"
+        questionText.text = post.question
         optionAText.text = post.option1
         optionBText.text = post.option2
 
@@ -61,8 +67,27 @@ class WouldYouRatherView @JvmOverloads constructor(
         optionBText.setOnClickListener { handleChooseOption(1) }
     }
 
+    fun setCurrentUser(username: String) {
+        this.currentUser = username
+    }
+
+    fun setOptionTextSize(sizeSp: Int) {
+        optionAText.textSize = sizeSp.toFloat()
+        optionBText.textSize = sizeSp.toFloat()
+    }
+
     private fun handleChooseOption(optionIndex: Int) {
-        Backend.choose(optionIndex, post_id, currentUser)
+        try {
+            Backend.choose(optionIndex, post_id, currentUser)
+        } catch (e: Exception) {
+            // Local fallback while backend is stubbed
+            if (optionIndex == 0) {
+                option1Count = Integer.valueOf(option1Count.toInt() + 1)
+            } else {
+                option2Count = Integer.valueOf(option2Count.toInt() + 1)
+            }
+            Toast.makeText(context, "Backend pending; counted locally.", Toast.LENGTH_SHORT).show()
+        }
 
         val total = option1Count.toInt() + option2Count.toInt()
         val pctA = if (total > 0) (100 * option1Count.toInt() / total) else 0
