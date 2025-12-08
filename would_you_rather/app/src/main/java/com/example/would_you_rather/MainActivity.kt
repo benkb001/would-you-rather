@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 val intent : Intent = Intent(this, HomeActivity::class.java)
                 intent.putExtra("username", user)
                 startActivity(intent)
-            } catch (e : Exception) {
+            } catch (e : Throwable) {
                 // Dev fallback while backend is stubbed
                 LocalPrefs.saveLastUsername(this, user)
                 val intent : Intent = Intent(this, HomeActivity::class.java)

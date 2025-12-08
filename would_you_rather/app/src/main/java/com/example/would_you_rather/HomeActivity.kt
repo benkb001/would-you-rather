@@ -46,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
             val p = Backend.getPost(username)
             statusMessage.visibility = View.GONE
             p
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             statusMessage.visibility = View.VISIBLE
             statusMessage.text = "Showing sample while backend is pending."
             Post(
@@ -54,8 +54,8 @@ class HomeActivity : AppCompatActivity() {
                 question = "Travel to the past or the future?",
                 option1 = "Past",
                 option2 = "Future",
-                option1Count = Integer.valueOf(12),
-                option2Count = Integer.valueOf(18),
+                option1Count = 12,
+                option2Count = 18,
                 author = "demo_user"
             )
         }

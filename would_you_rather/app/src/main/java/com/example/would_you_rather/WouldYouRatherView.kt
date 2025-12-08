@@ -29,8 +29,8 @@ class WouldYouRatherView @JvmOverloads constructor(
     private lateinit var author: String
     private lateinit var option1: String
     private lateinit var option2: String
-    private lateinit var option1Count: Integer
-    private lateinit var option2Count: Integer
+    private var option1Count: Int = 0
+    private var option2Count: Int = 0
     private lateinit var currentUser: String
     private lateinit var question: String
 
@@ -79,12 +79,12 @@ class WouldYouRatherView @JvmOverloads constructor(
     private fun handleChooseOption(optionIndex: Int) {
         try {
             Backend.choose(optionIndex, post_id, currentUser)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             // Local fallback while backend is stubbed
             if (optionIndex == 0) {
-                option1Count = Integer.valueOf(option1Count.toInt() + 1)
+                option1Count += 1
             } else {
-                option2Count = Integer.valueOf(option2Count.toInt() + 1)
+                option2Count += 1
             }
             Toast.makeText(context, "Backend pending; counted locally.", Toast.LENGTH_SHORT).show()
         }
