@@ -28,8 +28,8 @@ class WouldYouRatherView @JvmOverloads constructor(
     private lateinit var author: String
     private lateinit var option1: String
     private lateinit var option2: String
-    private lateinit var option1Count: Integer
-    private lateinit var option2Count: Integer
+    private var option1Count: Int = 0
+    private var option2Count: Int = 0
     private lateinit var currentUser: String
 
     private val authorText: TextView
@@ -45,13 +45,14 @@ class WouldYouRatherView @JvmOverloads constructor(
         optionBText = findViewById(R.id.optionB)
     }
 
-    fun setPost(post: Post) {
+    fun setPost(post: Post, username: String) {
         this.post_id = post.post_id
         this.author = post.author
         this.option1 = post.option1
         this.option2 = post.option2
         this.option1Count = post.option1Count
         this.option2Count = post.option2Count
+        this.currentUser = username
 
         authorText.text = "Posted by ${post.author}"
         optionAText.text = post.option1
@@ -62,13 +63,19 @@ class WouldYouRatherView @JvmOverloads constructor(
     }
 
     private fun handleChooseOption(optionIndex: Int) {
-        Backend.choose(optionIndex, post_id, currentUser)
+        Backend.choose(
+            optionIndex, post_id,
+            onSuccess = { opt1Count, opt2Count ->
+                val total = opt1Count + opt2Count
+                val pctA = if (total > 0) (100 * opt1Count / total) else 0
+                val pctB = if (total > 0) (100 * opt2Count / total) else 0
 
-        val total = option1Count.toInt() + option2Count.toInt()
-        val pctA = if (total > 0) (100 * option1Count.toInt() / total) else 0
-        val pctB = if (total > 0) (100 * option2Count.toInt() / total) else 0
-
-        optionAText.text = "$option1Count votes ($pctA%)\n"
-        optionBText.text = "$option2Count votes ($pctB%)\n"
+                optionAText.text = "$opt1Count votes ($pctA%)"
+                optionBText.text = "$opt2Count votes ($pctB%)"
+            },
+            onError = { message ->
+                // can include error handling here
+            }
+        )
     }
 }

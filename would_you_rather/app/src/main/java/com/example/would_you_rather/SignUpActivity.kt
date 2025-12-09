@@ -24,18 +24,17 @@ class SignUpActivity : AppCompatActivity() {
             val password_confirmed = findViewById<EditText>(
                 R.id.input_password_confirm).text.toString()
 
-            try {
-                Backend.signUp(user, password, password_confirmed)
-                val intent : Intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra("username", user)
-                startActivity(intent)
-            } catch (e : Exception) {
-                val root : ConstraintLayout = findViewById<ConstraintLayout>(R.id.main)
-                Snackbar.make(
-                    root,
-                    "Unable to sign in: ${e.message}",
-                    Snackbar.LENGTH_SHORT).show()
-            }
+            Backend.signUp(user, password, password_confirmed,
+                onSuccess = {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("username", user)
+                    startActivity(intent)
+                },
+                onError = { message ->
+                    val root = findViewById<ConstraintLayout>(R.id.main)
+                    Snackbar.make(root, "Unable to sign up: $message", Snackbar.LENGTH_SHORT).show()
+                }
+            )
         }
 
         findViewById<Button>(R.id.button_sign_in).setOnClickListener {

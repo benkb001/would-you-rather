@@ -28,11 +28,18 @@ class HomeActivity : AppCompatActivity() {
         val postContainer = findViewById<LinearLayout>(R.id.postContainer)
         val createPostButton = findViewById<Button>(R.id.createPostButton)
 
-        // Load a post
-        val post = Backend.getPost(username)
-        val postView = WouldYouRatherView(this)
-        postView.setPost(post)
-        postContainer.addView(postView)
+        // loads async
+        Backend.getPost(
+            onSuccess = { post ->
+                val postView = WouldYouRatherView(this)
+                postView.setPost(post, username)  // added a username parameter
+                postContainer.addView(postView)
+            },
+            onError = { message ->
+                // Handle no posts or error
+            }
+        )
+
 
         // TODO: Load a new post when an option is clicked
 

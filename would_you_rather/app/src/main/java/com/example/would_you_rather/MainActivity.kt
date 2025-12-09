@@ -2,6 +2,7 @@ package com.example.would_you_rather
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +16,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // DEBUGGING TESTING:
+        Log.d("FIREBASE_TEST", "calling signUp...")
+
+        Backend.signUp("testuser2", "password123", "password123",
+            onSuccess = {
+                Log.d("FIREBASE_TEST", "yay works! usernames/users on console")
+            },
+            onError = { message ->
+                Log.d("FIREBASE_TEST", "error: $message")
+            }
+        )
+
+        Log.d("FIREBASE_TEST", "signUp called, wait for callback!")
+
 
 
         setContentView(R.layout.activity_main)
@@ -32,18 +47,20 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_sign_in).setOnClickListener {
             val user : String = findViewById<EditText>(R.id.input_username).text.toString()
             val password : String = findViewById<EditText>(R.id.input_password).text.toString()
-            try {
-                Backend.signIn(user, password)
-                val intent : Intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra("username", user)
-                startActivity(intent)
-            } catch (e : Exception) {
-                val root : ConstraintLayout = findViewById<ConstraintLayout>(R.id.main)
-                Snackbar.make(
-                    root,
-                    "Unable to sign in: ${e.message}",
-                    Snackbar.LENGTH_SHORT).show()
-            }
+            Backend.signIn(user, password,
+                onSuccess = { username ->
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("username", username)
+                    startActivity(intent)
+                },
+                onError = { message ->
+                    val root = findViewById<ConstraintLayout>(R.id.main)
+                    Snackbar.make(root, "unable to sign in: $message", Snackbar.LENGTH_SHORT).show()
+                }
+            )
         }
+
+
+
     }
 }
