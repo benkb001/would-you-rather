@@ -13,6 +13,15 @@
         android:textSize="14sp"
         android:padding="8dp" />
 
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Would you rather?"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="8dp" />
+
     <!-- Top Option -->
     <TextView
         android:id="@+id/optionA"

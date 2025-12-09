@@ -1,0 +1,51 @@
+# Build outputs
+/build/
+**/build/
+/out/
+/captures/
+*.apk
+*.ap_
+*.aab
+*.aar
+output.json
+
+# Gradle
+.gradle/
+/local.properties
+/.gradle/
+.gradletasknamecache
+/gradle-app.setting
+
+# IDE files
+*.iml
+/.idea/
+.project
+.settings/
+.classpath
+
+# Kotlin/Java
+*.log
+*.class
+*.dex
+*.jar
+*.war
+*.ear
+*.hprof
+*.kotlin_module
+*.tps
+hs_err_pid*
+
+# Android NDK/CMake
+.cxx/
+.externalNativeBuild/
+
+# Signing / credentials
+*.keystore
+*.jks
+*.pem
+*.p12
+
+# OS generated
+.DS_Store
+Thumbs.db
+ehthumbs.db

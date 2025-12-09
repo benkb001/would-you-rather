@@ -12,6 +12,8 @@ import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.Snackbar
 
+// Group participation: Om Arya, Benjamin Bradford, Saanvi Kataria, and Steven Ha each contributed ~25%.
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,11 @@ class MainActivity : AppCompatActivity() {
             insets
 
         }
+
+        // Prefill last username if available
+        findViewById<EditText>(R.id.input_username).setText(
+            LocalPrefs.getLastUsername(this)
+        )
 
         findViewById<Button>(R.id.button_sign_up).setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))

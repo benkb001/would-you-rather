@@ -31,8 +31,10 @@ class WouldYouRatherView @JvmOverloads constructor(
     private var option1Count: Int = 0
     private var option2Count: Int = 0
     private lateinit var currentUser: String
+    private lateinit var question: String
 
     private val authorText: TextView
+    private val questionText: TextView
     private val optionAText: TextView
     private val optionBText: TextView
 
@@ -48,6 +50,7 @@ class WouldYouRatherView @JvmOverloads constructor(
     fun setPost(post: Post, username: String) {
         this.post_id = post.post_id
         this.author = post.author
+        this.question = post.question
         this.option1 = post.option1
         this.option2 = post.option2
         this.option1Count = post.option1Count
@@ -55,11 +58,21 @@ class WouldYouRatherView @JvmOverloads constructor(
         this.currentUser = username
 
         authorText.text = "Posted by ${post.author}"
+        questionText.text = post.question
         optionAText.text = post.option1
         optionBText.text = post.option2
 
         optionAText.setOnClickListener { handleChooseOption(0) }
         optionBText.setOnClickListener { handleChooseOption(1) }
+    }
+
+    fun setCurrentUser(username: String) {
+        this.currentUser = username
+    }
+
+    fun setOptionTextSize(sizeSp: Int) {
+        optionAText.textSize = sizeSp.toFloat()
+        optionBText.textSize = sizeSp.toFloat()
     }
 
     private fun handleChooseOption(optionIndex: Int) {
@@ -70,12 +83,19 @@ class WouldYouRatherView @JvmOverloads constructor(
                 val pctA = if (total > 0) (100 * opt1Count / total) else 0
                 val pctB = if (total > 0) (100 * opt2Count / total) else 0
 
-                optionAText.text = "$opt1Count votes ($pctA%)"
-                optionBText.text = "$opt2Count votes ($pctB%)"
+                optionAText.text = "$opt1Count votes ($pctA%)\n"
+                optionBText.text = "$opt2Count votes ($pctB%)\n"
             },
             onError = { message ->
                 // can include error handling here
             }
-        )
+
+                )
+
+                val total = option1Count.toInt() + option2Count.toInt()
+                val pctA = if (total > 0) (100 * option1Count.toInt() / total) else 0
+                val pctB = if (total > 0) (100 * option2Count.toInt() / total) else 0
+
+
     }
 }
