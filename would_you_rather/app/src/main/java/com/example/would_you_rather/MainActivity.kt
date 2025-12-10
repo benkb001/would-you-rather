@@ -39,6 +39,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_sign_in).setOnClickListener {
             val user : String = findViewById<EditText>(R.id.input_username).text.toString()
             val password : String = findViewById<EditText>(R.id.input_password).text.toString()
+            val root = findViewById<ConstraintLayout>(R.id.main)
+
+            if (user.isBlank() || password.isBlank()) {
+                Snackbar.make(root, "Please enter a username and password.", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             Backend.signIn(user, password,
                 onSuccess = { username ->
                     LocalPrefs.saveLastUsername(this, username)
@@ -47,7 +53,6 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 },
                 onError = { message ->
-                    val root = findViewById<ConstraintLayout>(R.id.main)
                     Snackbar.make(root, "unable to sign in: $message", Snackbar.LENGTH_SHORT).show()
                 }
             )

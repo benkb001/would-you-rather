@@ -23,6 +23,12 @@ class SignUpActivity : AppCompatActivity() {
                 R.id.input_password).text.toString()
             val password_confirmed = findViewById<EditText>(
                 R.id.input_password_confirm).text.toString()
+            val root = findViewById<ConstraintLayout>(R.id.main)
+
+            if (user.isBlank() || password.isBlank() || password_confirmed.isBlank()) {
+                Snackbar.make(root, "Please fill in all fields.", Snackbar.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             Backend.signUp(user, password, password_confirmed,
                 onSuccess = {
@@ -32,7 +38,6 @@ class SignUpActivity : AppCompatActivity() {
                     startActivity(intent)
                 },
                 onError = { message ->
-                    val root = findViewById<ConstraintLayout>(R.id.main)
                     Snackbar.make(root, "Unable to sign up: $message", Snackbar.LENGTH_SHORT).show()
                 }
             )
