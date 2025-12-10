@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "414665609006",
+    "project_id": "cmsc436-would-you-rather",
+    "storage_bucket": "cmsc436-would-you-rather.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414665609006:android:0b904cbe3182e85c78f4bf",
+        "android_client_info": {
+          "package_name": "com.example.would_you_rather"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSR0AoYUqP_ZgCLXf5qHWzRimtCBrGXuo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

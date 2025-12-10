@@ -46,7 +46,6 @@ hs_err_pid*
 *.p12
 
 # Project-specific ignores
-would_you_rather/app/google-services.json
 would_you_rather/.kotlin/errors/
 
 # OS generated
