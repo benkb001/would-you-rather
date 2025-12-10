@@ -11,7 +11,6 @@
         android:padding="16dp">
 
         <LinearLayout
-            android:id="@+id/postContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -64,6 +63,13 @@
                     android:max="30"
                     android:progress="18" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/post_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="12dp" />
 
         </LinearLayout>
 

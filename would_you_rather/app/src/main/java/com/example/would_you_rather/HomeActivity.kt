@@ -35,7 +35,7 @@ class HomeActivity : AppCompatActivity() {
 
         val username = intent.getStringExtra("username") ?: return
 
-        val postContainer = findViewById<LinearLayout>(R.id.postContainer)
+        val postContent = findViewById<LinearLayout>(R.id.post_content)
         val createPostButton = findViewById<Button>(R.id.createPostButton)
         val navigationView = findViewById<com.example.would_you_rather.NavigationView>(R.id.navigation)
         val textSizeLabel = findViewById<TextView>(R.id.textSizeLabel)
@@ -67,14 +67,14 @@ class HomeActivity : AppCompatActivity() {
             Backend.getPost(
                 onSuccess = { post ->
                     statusMessage.visibility = View.GONE
-                    postContainer.removeAllViews()
+                    postContent.removeAllViews()
 
                     postView = WouldYouRatherView(this)
                     postView?.setCurrentUser(username)
                     postView?.setOptionTextSize(optionTextSizeSp)
                     postView?.setPost(post, username)
                     postView?.setOnVoteComplete { loadPost() }
-                    postContainer.addView(postView)
+                    postContent.addView(postView)
                 },
                 onError = { message ->
                     statusMessage.visibility = View.VISIBLE
