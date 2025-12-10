@@ -18,21 +18,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        // DEBUGGING TESTING:
-        Log.d("FIREBASE_TEST", "calling signUp...")
-
-        Backend.signUp("testuser2", "password123", "password123",
-            onSuccess = {
-                Log.d("FIREBASE_TEST", "yay works! usernames/users on console")
-            },
-            onError = { message ->
-                Log.d("FIREBASE_TEST", "error: $message")
-            }
-        )
-
-        Log.d("FIREBASE_TEST", "signUp called, wait for callback!")
-
-
 
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -56,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             val password : String = findViewById<EditText>(R.id.input_password).text.toString()
             Backend.signIn(user, password,
                 onSuccess = { username ->
+                    LocalPrefs.saveLastUsername(this, username)
                     val intent = Intent(this, HomeActivity::class.java)
                     intent.putExtra("username", username)
                     startActivity(intent)

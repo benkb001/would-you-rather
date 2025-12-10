@@ -41,9 +41,14 @@ class HomeActivity : AppCompatActivity() {
         textSizeSeekBar.progress = optionTextSizeSp
         textSizeLabel.text = "Option text size (${optionTextSizeSp}sp)"
 
-        // loads async
+        statusMessage.visibility = View.VISIBLE
+        statusMessage.text = "Loading posts..."
+
         Backend.getPost(
             onSuccess = { post ->
+                statusMessage.visibility = View.GONE
+                postContainer.removeAllViews()
+
                 postView = WouldYouRatherView(this)
                 postView?.setCurrentUser(username)
                 postView?.setOptionTextSize(optionTextSizeSp)
@@ -51,7 +56,8 @@ class HomeActivity : AppCompatActivity() {
                 postContainer.addView(postView)
             },
             onError = { message ->
-                // handle no posts or error
+                statusMessage.visibility = View.VISIBLE
+                statusMessage.text = "Unable to load posts: $message"
             }
         )
 

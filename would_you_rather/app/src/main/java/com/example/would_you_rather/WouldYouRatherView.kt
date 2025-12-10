@@ -43,6 +43,7 @@ class WouldYouRatherView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.view_would_you_rather, this, true)
 
         authorText = findViewById(R.id.authorText)
+        questionText = findViewById(R.id.questionText)
         optionAText = findViewById(R.id.optionA)
         optionBText = findViewById(R.id.optionB)
     }
@@ -87,15 +88,8 @@ class WouldYouRatherView @JvmOverloads constructor(
                 optionBText.text = "$opt2Count votes ($pctB%)\n"
             },
             onError = { message ->
-                // can include error handling here
+                Toast.makeText(context, "Vote failed: $message", Toast.LENGTH_SHORT).show()
             }
-
-                )
-
-                val total = option1Count.toInt() + option2Count.toInt()
-                val pctA = if (total > 0) (100 * option1Count.toInt() / total) else 0
-                val pctB = if (total > 0) (100 * option2Count.toInt() / total) else 0
-
-
+        )
     }
 }

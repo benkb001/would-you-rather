@@ -26,6 +26,7 @@ class SignUpActivity : AppCompatActivity() {
 
             Backend.signUp(user, password, password_confirmed,
                 onSuccess = {
+                    LocalPrefs.saveLastUsername(this, user)
                     val intent = Intent(this, HomeActivity::class.java)
                     intent.putExtra("username", user)
                     startActivity(intent)
