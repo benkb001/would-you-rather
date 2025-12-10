@@ -213,47 +213,77 @@ class Backend {
                 return
             }
 
+            val userSeenRef = db.getReference("users").child(uid)
+                .child("seen_posts").child(postId)
             val postRef = db.getReference("posts").child(postId)
             val countField = if (option == 0) "option1Count" else "option2Count"
 
-            postRef.child(countField)
-                .runTransaction(object : Transaction.Handler {
-                    override fun doTransaction(currentData: MutableData): Transaction.Result {
-                        val currentCount = currentData.getValue(Int::class.java) ?: 0
-                        currentData.value = currentCount + 1
-                        return Transaction.success(currentData)
+            // First, claim the vote for this user to prevent double votes.
+            userSeenRef.runTransaction(object : Transaction.Handler {
+                override fun doTransaction(currentData: MutableData): Transaction.Result {
+                    val alreadyVoted = currentData.getValue(Boolean::class.java) ?: false
+                    if (alreadyVoted) {
+                        return Transaction.abort()
+                    }
+                    currentData.value = true
+                    return Transaction.success(currentData)
+                }
+
+                override fun onComplete(
+                    error: DatabaseError?,
+                    committed: Boolean,
+                    snapshot: DataSnapshot?
+                ) {
+                    if (error != null) {
+                        onError(error.message)
+                        return
+                    }
+                    if (!committed) {
+                        onError("You already voted on this post.")
+                        return
                     }
 
-                    override fun onComplete(
-                        error: DatabaseError?,
-                        committed: Boolean,
-                        snapshot: DataSnapshot?
-                    ) {
-                        if (error != null) {
-                            onError(error.message)
-                            return
-                        }
-                        if (!committed) {
-                            onError("Failed to record vote, please try again.")
-                            return
-                        }
-
-                        db.getReference("users").child(uid)
-                            .child("seen_posts").child(postId).setValue(true)
-
-                        postRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(postSnapshot: DataSnapshot) {
-                                val opt1 = postSnapshot.child("option1Count").getValue(Int::class.java) ?: 0
-                                val opt2 = postSnapshot.child("option2Count").getValue(Int::class.java) ?: 0
-                                onSuccess(opt1, opt2)
+                    // Now increment the chosen option count.
+                    postRef.child(countField)
+                        .runTransaction(object : Transaction.Handler {
+                            override fun doTransaction(currentData: MutableData): Transaction.Result {
+                                val currentCount = currentData.getValue(Int::class.java) ?: 0
+                                currentData.value = currentCount + 1
+                                return Transaction.success(currentData)
                             }
 
-                            override fun onCancelled(error: DatabaseError) {
-                                onError(error.message)
+                            override fun onComplete(
+                                error: DatabaseError?,
+                                committed: Boolean,
+                                snapshot: DataSnapshot?
+                            ) {
+                                if (error != null) {
+                                    // Roll back the seen flag so user can retry if increment fails.
+                                    userSeenRef.setValue(null)
+                                    onError(error.message)
+                                    return
+                                }
+                                if (!committed) {
+                                    userSeenRef.setValue(null)
+                                    onError("Failed to record vote, please try again.")
+                                    return
+                                }
+
+                                postRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                    override fun onDataChange(postSnapshot: DataSnapshot) {
+                                        val opt1 = postSnapshot.child("option1Count").getValue(Int::class.java) ?: 0
+                                        val opt2 = postSnapshot.child("option2Count").getValue(Int::class.java) ?: 0
+                                        onSuccess(opt1, opt2)
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        onError(error.message)
+                                    }
+                                })
                             }
                         })
-                    }
-                })
+                }
+            })
 
 
         }

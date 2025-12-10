@@ -33,6 +33,7 @@ class WouldYouRatherView @JvmOverloads constructor(
     private var option2Count: Int = 0
     private lateinit var currentUser: String
     private lateinit var question: String
+    private var hasVoted = false
 
     private val authorText: TextView
     private val questionText: TextView
@@ -59,11 +60,14 @@ class WouldYouRatherView @JvmOverloads constructor(
         this.option1Count = post.option1Count
         this.option2Count = post.option2Count
         this.currentUser = username
+        this.hasVoted = false
 
         authorText.text = "Posted by ${post.author}"
         questionText.text = post.question
         optionAText.text = post.option1
         optionBText.text = post.option2
+        optionAText.isEnabled = true
+        optionBText.isEnabled = true
 
         optionAText.setOnClickListener { handleChooseOption(0) }
         optionBText.setOnClickListener { handleChooseOption(1) }
@@ -83,6 +87,12 @@ class WouldYouRatherView @JvmOverloads constructor(
     }
 
     private fun handleChooseOption(optionIndex: Int) {
+        if (hasVoted) {
+            return
+        }
+        hasVoted = true
+        optionAText.isEnabled = false
+        optionBText.isEnabled = false
         Backend.choose(
             optionIndex, post_id,
             onSuccess = { opt1Count, opt2Count ->
@@ -97,6 +107,9 @@ class WouldYouRatherView @JvmOverloads constructor(
                 onVoteComplete?.invoke()
             },
             onError = { message ->
+                hasVoted = false
+                optionAText.isEnabled = true
+                optionBText.isEnabled = true
                 Toast.makeText(context, "Vote failed: $message", Toast.LENGTH_SHORT).show()
             }
         )
