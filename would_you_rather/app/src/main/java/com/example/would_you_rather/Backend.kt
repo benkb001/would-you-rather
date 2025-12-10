@@ -1,17 +1,18 @@
 package com.example.would_you_rather
 
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
 import java.util.UUID
-import org.json.JSONObject
 
 class Backend {
     companion object {
-        var db: FirebaseDatabase = FirebaseDatabase.getInstance()
-        var auth: FirebaseAuth = FirebaseAuth.getInstance()
+        private val db: FirebaseDatabase = FirebaseDatabase.getInstance()
+        private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
         fun signUp(
                       username: String,
@@ -48,7 +49,11 @@ class Backend {
                         auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    val uid = auth.currentUser?.uid ?: return@addOnCompleteListener
+                                    val uid = auth.currentUser?.uid
+                                    if (uid == null) {
+                                        onError("Unable to create account; please try again.")
+                                        return@addOnCompleteListener
+                                    }
 
                                     val userData = mapOf(
                                         "username" to username,
@@ -120,8 +125,10 @@ class Backend {
             return auth.currentUser?.uid
         }
 
-        fun getPost(onSuccess: (Post) -> Unit,
-                    onError: (String) -> Unit ){
+        fun getPost(
+            onSuccess: (Post) -> Unit,
+            onError: (String) -> Unit
+        ) {
 
 
             /*
@@ -176,10 +183,12 @@ class Backend {
 
         }
 
-        fun choose(option: Int,
-                    postId: String,
-                    onSuccess: (option1Count: Int, option2Count: Int) -> Unit,
-                    onError: (String) -> Unit) {
+        fun choose(
+            option: Int,
+            postId: String,
+            onSuccess: (option1Count: Int, option2Count: Int) -> Unit,
+            onError: (String) -> Unit
+        ) {
             /*
             This function is used to update the counts of the associated
             post and return the new counts, and also tell us that the user
@@ -208,10 +217,26 @@ class Backend {
             val countField = if (option == 0) "option1Count" else "option2Count"
 
             postRef.child(countField)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val currentCount = snapshot.getValue(Int::class.java) ?: 0
-                        postRef.child(countField).setValue(currentCount + 1)
+                .runTransaction(object : Transaction.Handler {
+                    override fun doTransaction(currentData: MutableData): Transaction.Result {
+                        val currentCount = currentData.getValue(Int::class.java) ?: 0
+                        currentData.value = currentCount + 1
+                        return Transaction.success(currentData)
+                    }
+
+                    override fun onComplete(
+                        error: DatabaseError?,
+                        committed: Boolean,
+                        snapshot: DataSnapshot?
+                    ) {
+                        if (error != null) {
+                            onError(error.message)
+                            return
+                        }
+                        if (!committed) {
+                            onError("Failed to record vote, please try again.")
+                            return
+                        }
 
                         db.getReference("users").child(uid)
                             .child("seen_posts").child(postId).setValue(true)
@@ -228,20 +253,18 @@ class Backend {
                             }
                         })
                     }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        onError(error.message)
-                    }
                 })
 
 
         }
 
-        fun post( question: String,
-                  option1: String,
-                  option2: String,
-                  onSuccess: () -> Unit,
-                  onError: (String) -> Unit) {
+        fun post(
+            question: String,
+            option1: String,
+            option2: String,
+            onSuccess: () -> Unit,
+            onError: (String) -> Unit
+        ) {
 
             /*
             This function will generate a new post. It will make a new unique post_id,

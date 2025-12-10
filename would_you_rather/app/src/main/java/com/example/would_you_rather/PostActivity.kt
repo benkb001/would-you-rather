@@ -72,15 +72,18 @@ class PostActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            try {
-                Backend.post(question, option1, option2, username)
-                Toast.makeText(this, "Posted!", Toast.LENGTH_SHORT).show()
-                finish()
-            } catch (e: Exception) {
-                // Dev fallback while backend is stubbed
-                Toast.makeText(this, "Backend pending; saved locally.", Toast.LENGTH_SHORT).show()
-                finish()
-            }
+            Backend.post(
+                question,
+                option1,
+                option2,
+                onSuccess = {
+                    Toast.makeText(this, "Posted!", Toast.LENGTH_SHORT).show()
+                    finish()
+                },
+                onError = { message ->
+                    Toast.makeText(this, "Unable to post: $message", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
 
         navigationView.setOnHomeClick {

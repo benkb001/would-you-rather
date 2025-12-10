@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 
 /*
     TODO: This class will be the view where users can see and select
@@ -37,6 +38,7 @@ class WouldYouRatherView @JvmOverloads constructor(
     private val questionText: TextView
     private val optionAText: TextView
     private val optionBText: TextView
+    private var onVoteComplete: (() -> Unit)? = null
 
     init {
         orientation = VERTICAL
@@ -76,16 +78,23 @@ class WouldYouRatherView @JvmOverloads constructor(
         optionBText.textSize = sizeSp.toFloat()
     }
 
+    fun setOnVoteComplete(handler: () -> Unit) {
+        this.onVoteComplete = handler
+    }
+
     private fun handleChooseOption(optionIndex: Int) {
         Backend.choose(
             optionIndex, post_id,
             onSuccess = { opt1Count, opt2Count ->
+                option1Count = opt1Count
+                option2Count = opt2Count
                 val total = opt1Count + opt2Count
                 val pctA = if (total > 0) (100 * opt1Count / total) else 0
                 val pctB = if (total > 0) (100 * opt2Count / total) else 0
 
                 optionAText.text = "$opt1Count votes ($pctA%)\n"
                 optionBText.text = "$opt2Count votes ($pctB%)\n"
+                onVoteComplete?.invoke()
             },
             onError = { message ->
                 Toast.makeText(context, "Vote failed: $message", Toast.LENGTH_SHORT).show()

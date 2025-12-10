@@ -41,29 +41,29 @@ class HomeActivity : AppCompatActivity() {
         textSizeSeekBar.progress = optionTextSizeSp
         textSizeLabel.text = "Option text size (${optionTextSizeSp}sp)"
 
-        statusMessage.visibility = View.VISIBLE
-        statusMessage.text = "Loading posts..."
+        fun loadPost() {
+            statusMessage.visibility = View.VISIBLE
+            statusMessage.text = "Loading posts..."
+            Backend.getPost(
+                onSuccess = { post ->
+                    statusMessage.visibility = View.GONE
+                    postContainer.removeAllViews()
 
-        Backend.getPost(
-            onSuccess = { post ->
-                statusMessage.visibility = View.GONE
-                postContainer.removeAllViews()
+                    postView = WouldYouRatherView(this)
+                    postView?.setCurrentUser(username)
+                    postView?.setOptionTextSize(optionTextSizeSp)
+                    postView?.setPost(post, username)
+                    postView?.setOnVoteComplete { loadPost() }
+                    postContainer.addView(postView)
+                },
+                onError = { message ->
+                    statusMessage.visibility = View.VISIBLE
+                    statusMessage.text = "Unable to load posts: $message"
+                }
+            )
+        }
 
-                postView = WouldYouRatherView(this)
-                postView?.setCurrentUser(username)
-                postView?.setOptionTextSize(optionTextSizeSp)
-                postView?.setPost(post, username)
-                postContainer.addView(postView)
-            },
-            onError = { message ->
-                statusMessage.visibility = View.VISIBLE
-                statusMessage.text = "Unable to load posts: $message"
-            }
-        )
-
-
-
-        // TODO: Load a new post when an option is clicked
+        loadPost()
 
         // Create new post button -> open PostActivity
         createPostButton.setOnClickListener {
