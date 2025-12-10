@@ -9,6 +9,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import android.view.View
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 
 /*
     TODO: We will need to make a view for the
@@ -23,6 +27,7 @@ import android.view.View
 class HomeActivity : AppCompatActivity() {
     private var optionTextSizeSp: Int = 18
     private var postView: WouldYouRatherView? = null
+    private var adView: AdView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,10 +41,25 @@ class HomeActivity : AppCompatActivity() {
         val textSizeLabel = findViewById<TextView>(R.id.textSizeLabel)
         val textSizeSeekBar = findViewById<SeekBar>(R.id.textSizeSeekBar)
         val statusMessage = findViewById<TextView>(R.id.statusMessage)
+        val adContainer = findViewById<LinearLayout>(R.id.ad_view)
 
         optionTextSizeSp = LocalPrefs.getOptionTextSize(this)
         textSizeSeekBar.progress = optionTextSizeSp
         textSizeLabel.text = "Option text size (${optionTextSizeSp}sp)"
+
+        MobileAds.initialize(this)
+        adView = AdView(this).apply {
+            setAdSize(AdSize.BANNER)
+            adUnitId = "ca-app-pub-3940256099942544/6300978111" // Google-provided test banner unit
+        }
+        adContainer.removeAllViews()
+        adContainer.addView(adView)
+        adView?.loadAd(
+            AdRequest.Builder()
+                .addKeyword("fun")
+                .addKeyword("polls")
+                .build()
+        )
 
         fun loadPost() {
             statusMessage.visibility = View.VISIBLE
@@ -95,4 +115,18 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
+    override fun onPause() {
+        adView?.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adView?.resume()
+    }
+
+    override fun onDestroy() {
+        adView?.destroy()
+        super.onDestroy()
+    }
 }

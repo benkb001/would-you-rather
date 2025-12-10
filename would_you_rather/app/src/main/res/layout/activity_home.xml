@@ -17,15 +17,14 @@
             android:orientation="vertical"
             android:dividerPadding="12dp">
 
-            <TextView
-                android:id="@+id/adBanner"
+            <LinearLayout
+                android:id="@+id/ad_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="Sponsored: Get 50% off premium would-you-rather packs!"
-                android:textStyle="bold"
-                android:background="#FFE9B3"
-                android:textColor="@color/black" />
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:background="#FFE9B3" />
 
             <Button
                 android:id="@+id/createPostButton"
