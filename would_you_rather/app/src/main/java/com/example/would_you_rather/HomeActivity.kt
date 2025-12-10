@@ -13,17 +13,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-
-/*
-    TODO: We will need to make a view for the
-    user to scroll through posts. We will need
-    to call Backend.getPost(username) to
-    get information about the next post we
-    want the user to see, then build a
-    view using WouldYouRatherView and display it.
-    You can get the username with intent.getStringExtra("username")
-    We'll also need a button somewhere to create a new post (it should open PostActivity via an intent)
-*/
 class HomeActivity : AppCompatActivity() {
     private var optionTextSizeSp: Int = 18
     private var postView: WouldYouRatherView? = null

@@ -20,17 +20,6 @@ class Backend {
                       passwordConfirmation: String,
                       onSuccess: () -> Unit,
                       onError: (String) -> Unit) {
-            /* TODO: This function will look into the firebase server and check if
-            there is an error. Possible errors:
-            a user with the provided username already exists
-            the password and password_confirmation do not match
-
-            If there are no errors, it will add the user to the database
-            There will be a 'users' array under the root,
-            each user element will be a json
-            with various information, for now just assign their username,
-            password, email.
-             */
             if (password != passwordConfirmation) {
                 onError("Passwords do not match.")
                 return
@@ -85,12 +74,6 @@ class Backend {
             password: String,
             onSuccess: (username: String) -> Unit,
             onError: (String) -> Unit) {
-            /*
-            TODO: This function will attempt to sign the user in
-            and throw an error if either the user does not exist,
-            or the password provided doesn't match the one we
-            have in the database
-             */
             db.getReference("usernames").child(username)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
