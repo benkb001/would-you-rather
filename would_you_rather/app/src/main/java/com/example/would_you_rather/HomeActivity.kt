@@ -28,19 +28,30 @@ class HomeActivity : AppCompatActivity() {
     private var optionTextSizeSp: Int = 18
     private var postView: WouldYouRatherView? = null
     private var adView: AdView? = null
+    private lateinit var postContent: LinearLayout
+    private lateinit var statusMessage: TextView
+    private lateinit var textSizeLabel: TextView
+    private lateinit var textSizeSeekBar: SeekBar
+    private var currentUsername: String = ""
+    private var hasLoadedPost = false
+    private var shouldRefreshOnResume = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
-        val username = intent.getStringExtra("username") ?: return
+        val username = intent.getStringExtra("username") ?: run {
+            finish()
+            return
+        }
+        currentUsername = username
 
-        val postContent = findViewById<LinearLayout>(R.id.post_content)
+        postContent = findViewById(R.id.post_content)
         val createPostButton = findViewById<Button>(R.id.createPostButton)
         val navigationView = findViewById<com.example.would_you_rather.NavigationView>(R.id.navigation)
-        val textSizeLabel = findViewById<TextView>(R.id.textSizeLabel)
-        val textSizeSeekBar = findViewById<SeekBar>(R.id.textSizeSeekBar)
-        val statusMessage = findViewById<TextView>(R.id.statusMessage)
+        textSizeLabel = findViewById(R.id.textSizeLabel)
+        textSizeSeekBar = findViewById(R.id.textSizeSeekBar)
+        statusMessage = findViewById(R.id.statusMessage)
         val adContainer = findViewById<LinearLayout>(R.id.ad_view)
 
         optionTextSizeSp = LocalPrefs.getOptionTextSize(this)
@@ -61,32 +72,11 @@ class HomeActivity : AppCompatActivity() {
                 .build()
         )
 
-        fun loadPost() {
-            statusMessage.visibility = View.VISIBLE
-            statusMessage.text = "Loading posts..."
-            Backend.getPost(
-                onSuccess = { post ->
-                    statusMessage.visibility = View.GONE
-                    postContent.removeAllViews()
-
-                    postView = WouldYouRatherView(this)
-                    postView?.setCurrentUser(username)
-                    postView?.setOptionTextSize(optionTextSizeSp)
-                    postView?.setPost(post, username)
-                    postView?.setOnVoteComplete { loadPost() }
-                    postContent.addView(postView)
-                },
-                onError = { message ->
-                    statusMessage.visibility = View.VISIBLE
-                    statusMessage.text = "Unable to load posts: $message"
-                }
-            )
-        }
-
         loadPost()
 
         // Create new post button -> open PostActivity
         createPostButton.setOnClickListener {
+            shouldRefreshOnResume = true
             val intent = Intent(this, PostActivity::class.java)
             intent.putExtra("username", username)
             startActivity(intent)
@@ -95,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
         // Navigation bar handling
         navigationView.setOnHomeClick { /* already here */ }
         navigationView.setOnPostClick {
+            shouldRefreshOnResume = true
             val intent = Intent(this, PostActivity::class.java)
             intent.putExtra("username", username)
             startActivity(intent)
@@ -115,7 +106,33 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
+    private fun loadPost() {
+        if (currentUsername.isBlank()) return
+
+        statusMessage.visibility = View.VISIBLE
+        statusMessage.text = "Loading posts..."
+        Backend.getPost(
+            onSuccess = { post ->
+                statusMessage.visibility = View.GONE
+                postContent.removeAllViews()
+
+                postView = WouldYouRatherView(this)
+                postView?.setCurrentUser(currentUsername)
+                postView?.setOptionTextSize(optionTextSizeSp)
+                postView?.setPost(post, currentUsername)
+                postView?.setOnVoteComplete { loadPost() }
+                postContent.addView(postView)
+            },
+            onError = { message ->
+                statusMessage.visibility = View.VISIBLE
+                statusMessage.text = "Unable to load posts: $message"
+            }
+        )
+        hasLoadedPost = true
+    }
+
     override fun onPause() {
+        shouldRefreshOnResume = true
         adView?.pause()
         super.onPause()
     }
@@ -123,6 +140,10 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         adView?.resume()
+        if (shouldRefreshOnResume || !hasLoadedPost) {
+            loadPost()
+            shouldRefreshOnResume = false
+        }
     }
 
     override fun onDestroy() {
